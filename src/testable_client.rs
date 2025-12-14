@@ -1,6 +1,5 @@
-use std::pin::Pin;
 use http::Method;
-use reqwest::{RequestBuilder, Response};
+use reqwest::{RequestBuilder};
 
 pub trait TestableClient {
     fn get(&self, url: &str) -> RequestBuilder;
@@ -10,10 +9,6 @@ pub trait TestableClient {
     fn delete(&self, url: &str) -> RequestBuilder;
     fn head(&self, url: &str) -> RequestBuilder;
     fn request(&self, method: Method, url: &str) -> RequestBuilder;
-    fn execute<'life0, 'async_trait>(
-        &'life0 self,
-        request: reqwest::Request,
-    ) -> Pin<Box<dyn Future<Output = Result<Response, reqwest::Error>> + Send + 'async_trait>>;
 }
 
 impl TestableClient for reqwest::Client {
@@ -43,12 +38,5 @@ impl TestableClient for reqwest::Client {
 
     fn request(&self, method: Method, url: &str) -> RequestBuilder {
         self.request(method, url)
-    }
-
-    fn execute<'life0, 'async_trait>(
-        &'life0 self,
-        request: reqwest::Request,
-    ) -> Pin<Box<dyn Future<Output = Result<Response, reqwest::Error>> + Send + 'async_trait>> {
-        self.execute(request)
     }
 }
