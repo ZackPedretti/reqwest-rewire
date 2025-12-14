@@ -8,3 +8,7 @@ description = "A Reqwest wrapper that redirects requests based on a map, useful 
 [dependencies]
 reqwest = { version = "0.12.24", features = ["blocking"]}
 http = "1.4.0"
+
+[dev-dependencies]
+httpmock = "0.8.2"
+tokio = "1.48.0"
