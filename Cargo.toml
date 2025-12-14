@@ -4,6 +4,7 @@ version = "0.1.0"
 edition = "2024"
 authors = ["Zack PEDRETTI"]
 description = "A Reqwest wrapper that redirects requests based on a map, useful for mocking APIs"
+license = "MIT"
 
 [dependencies]
 reqwest = { version = "0.12.24", features = ["blocking"]}
