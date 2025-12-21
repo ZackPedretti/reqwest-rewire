@@ -1,6 +1,6 @@
 use httpmock::Mock;
 use httpmock::prelude::*;
-use reqwest_rewire::testable_client::TestableClient;
+use reqwest_rewire::TestableClient;
 use std::collections::HashMap;
 
 fn build_query_string(query_args: &HashMap<&str, &str>) -> String {

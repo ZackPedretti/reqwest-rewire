@@ -1,5 +1,5 @@
 use std::borrow::Cow;
-use crate::testable_client::TestableClient;
+use crate::TestableClient;
 use http::Method;
 use reqwest::{RequestBuilder, Url};
 use std::collections::HashMap;

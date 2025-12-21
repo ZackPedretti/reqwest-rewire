@@ -3,7 +3,7 @@ mod common;
 use std::collections::HashMap;
 use httpmock::MockServer;
 use common::test_utils::*;
-use reqwest_rewire::rewire_client::RewireClient;
+use reqwest_rewire::RewireClient;
 
 #[tokio::test]
 async fn test_get_request_rewire() {
