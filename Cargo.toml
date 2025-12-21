@@ -3,8 +3,15 @@ name = "reqwest-rewire"
 version = "0.1.0"
 edition = "2024"
 authors = ["Zack PEDRETTI"]
-description = "A Reqwest wrapper that redirects requests based on a map, useful for mocking APIs"
-license = "MIT"
+description = "reqwest-rewire is a lightweight wrapper around reqwest that transparently rewrites outgoing request URLs based on user-defined rules. It is designed primarily for testing and local development, allowing you to redirect HTTP requests to mock servers without changing application code."
+license = "MIT OR Apache 2.0"
+repository = "https://github.com/ZackPedretti/reqwest-rewire"
+keywords = ["mock", "test", "reqwest"]
+categories = [
+    "development-tools::testing",
+    "web-programming",
+    "network-programming"
+]
 
 [dependencies]
 reqwest = { version = "0.12.24", features = ["blocking"]}
