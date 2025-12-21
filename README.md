@@ -44,26 +44,28 @@ The **most specific rule always wins**.
 
 Your application code depends on a trait, not a concrete client:
 
-    use crate::TestableClient;
+```rust
+    use reqwest-rewire::TestableClient;
 
-    fn fetch_data(client: &dyn TestableClient) {
+    fn fetch_data(client: impl TestableClient) {
         client
             .get("https://real-api.com/api/users")
             .send()
             .unwrap();
     }
-
+```
 ---
 
 ### 2. Use `reqwest::Client` in production
 
+```rust
     let client = reqwest::Client::new();
     fetch_data(&client);
-
+```
 ---
 
 ### 3. Use `RewireClient` in tests
-
+```rust
     use std::collections::HashMap;
     use reqwest_rewire::RewireClient;
 
@@ -76,7 +78,7 @@ Your application code depends on a trait, not a concrete client:
     let client = RewireClient::new(redirects);
 
     fetch_data(&client);
-
+```
 No application code changes required 🎉
 
 ---
