@@ -40,7 +40,7 @@ The **most specific rule always wins**.
 
 ## Usage
 
-### 1 Use the `TestableClient` trait
+### 1. Use the `TestableClient` trait
 
 Your application code depends on a trait, not a concrete client:
 
@@ -55,14 +55,14 @@ Your application code depends on a trait, not a concrete client:
 
 ---
 
-### 2 Use `reqwest::Client` in production
+### 2. Use `reqwest::Client` in production
 
     let client = reqwest::Client::new();
     fetch_data(&client);
 
 ---
 
-### 3 Use `RewireClient` in tests
+### 3. Use `RewireClient` in tests
 
     use std::collections::HashMap;
     use reqwest_rewire::RewireClient;
