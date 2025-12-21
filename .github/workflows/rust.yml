@@ -75,3 +75,10 @@ jobs:
         with:
           toolchain: stable
       - run: cargo build --release --all-features
+
+  publish:
+    needs: [audit, cargo-deny, check, build_and_test]
+    runs-on: ubuntu-latest
+    steps:
+      - run: cargo login ${{ secrets.CRATES_TOKEN }}
+      - run: cargo publish
