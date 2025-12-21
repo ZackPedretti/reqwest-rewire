@@ -45,7 +45,7 @@ The **most specific rule always wins**.
 Your application code depends on a trait, not a concrete client:
 
 ```rust
-    use reqwest-rewire::TestableClient;
+    use reqwest_rewire::TestableClient;
 
     fn fetch_data(client: impl TestableClient) {
         client
