@@ -19,6 +19,7 @@ fn build_query_string(query_args: &HashMap<&str, &str>) -> String {
 pub fn build_rewire_test_params(server: &MockServer) -> HashMap<String, String> {
     let mut params: HashMap<String, String> = HashMap::new();
     params.insert(server.url("/request"), server.url("/rewire_request"));
+    params.insert(server.url("/request/*"), server.url("/rewire_request/*"));
     params
 }
 
@@ -64,7 +65,6 @@ fn get_mock<'a>(
     request_body: Option<&str>,
     rewire: bool,
 ) -> Mock<'a> {
-
     if rewire {
         build_mock(
             server,
@@ -230,7 +230,6 @@ pub async fn test_request(
     server: &MockServer,
     method: http::Method,
 ) {
-    
     let httpmock_method = match method {
         http::Method::GET => GET,
         http::Method::POST => POST,
@@ -240,9 +239,9 @@ pub async fn test_request(
         http::Method::PATCH => PATCH,
         _ => unreachable!(),
     };
-    
+
     let mock = get_mock(server, &httpmock_method, query_args.clone(), request_body.clone(), rewire);
-    
+
     let query_args_string = match query_args {
         None => "".to_string(),
         Some(q) => build_query_string(&q),
@@ -252,6 +251,63 @@ pub async fn test_request(
         method.clone(),
         &server.url(format!("/request{}", query_args_string)),
     ).body(request_body.unwrap_or_default()).send().await;
+
+    assert!(request.is_ok());
+    let request = request.unwrap();
+    assert_eq!(request.status(), 200);
+    let response_body = request.text().await;
+    assert!(response_body.is_ok());
+    let response_body = response_body.unwrap();
+
+    if let http::Method::HEAD = method {
+        return assert_eq!(response_body, "");
+    }
+
+    mock.assert();
+    if rewire {
+        assert_eq!(response_body, "rewire_client");
+    } else {
+        assert_eq!(response_body, "reqwest_client");
+    }
+}
+
+pub async fn test_request_with_nested_path(
+    client: impl TestableClient,
+    rewire: bool,
+    server: &MockServer,
+    method: http::Method,
+) {
+    let httpmock_method = match method {
+        http::Method::GET => GET,
+        http::Method::POST => POST,
+        http::Method::PUT => PUT,
+        http::Method::DELETE => DELETE,
+        http::Method::HEAD => Method::HEAD,
+        http::Method::PATCH => PATCH,
+        _ => unreachable!(),
+    };
+
+    let mock = match rewire {
+        true => build_mock(server,
+                           "/rewire_request/nested_path",
+                           &httpmock_method,
+                           None,
+                           None,
+                           "rewire_client".to_string(),
+        ),
+        false => build_mock(server,
+                            "/request/nested_path",
+                            &httpmock_method,
+                            None,
+                            None,
+                            "reqwest_client".to_string(),
+        ),
+    };
+
+    let request = client.request(
+        method.clone(),
+        &server.url("/request/nested_path"),
+    ).send().await;
 
     assert!(request.is_ok());
     let request = request.unwrap();

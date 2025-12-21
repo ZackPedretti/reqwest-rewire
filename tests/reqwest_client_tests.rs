@@ -342,3 +342,10 @@ async fn test_request_delete_request_with_body_and_query_args() {
     query_args.insert("line", "T1");
     test_request(client, Some(query_args), Some("Vsauce, Michael here"), false, &server, http::Method::PATCH).await;
 }
+
+#[tokio::test]
+async fn test_with_nested_args() {
+    let server = MockServer::start();
+    let client = reqwest::Client::new();
+    test_request_with_nested_path(client, false, &server, http::Method::GET).await;
+}

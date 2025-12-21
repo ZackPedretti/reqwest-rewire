@@ -686,3 +686,17 @@ async fn test_request_delete_request_with_body_and_query_args() {
     query_args.insert("line", "T1");
     test_request(client, Some(query_args), Some("YES FINALLY"), false, &server, http::Method::DELETE).await;
 }
+
+#[tokio::test]
+async fn test_with_nested_args() {
+    let server = MockServer::start();
+    let client = RewireClient::new(HashMap::new());
+    test_request_with_nested_path(client, false, &server, http::Method::GET).await;
+}
+
+#[tokio::test]
+async fn test_with_nested_args_rewire() {
+    let server = MockServer::start();
+    let client = RewireClient::new(build_rewire_test_params(&server));
+    test_request_with_nested_path(client, true, &server, http::Method::GET).await;
+}
