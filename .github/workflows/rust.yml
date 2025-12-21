@@ -80,5 +80,6 @@ jobs:
     needs: [audit, cargo-deny, check, build_and_test]
     runs-on: ubuntu-latest
     steps:
+      - uses: actions/checkout@v4
       - run: cargo login ${{ secrets.CRATES_TOKEN }}
       - run: cargo publish
