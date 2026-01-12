@@ -1,11 +1,13 @@
 use crate::RewireClient;
 use crate::TestableClient;
 
+#[cfg(not(tarpaulin))]
 pub enum Client {
     ReqwestClient(reqwest::Client),
     TestClient(RewireClient),
 }
 
+#[cfg(not(tarpaulin))]
 impl TestableClient for Client {
     fn get(&self, url: &str) -> reqwest::RequestBuilder {
         match self {
