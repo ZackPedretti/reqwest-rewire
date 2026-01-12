@@ -9,7 +9,7 @@ It is designed primarily for **testing and local development**, allowing you to 
 ## Installation
 
     [dependencies]
-    reqwest-rewire = "0.1"
+    reqwest-rewire = "0.2"
 
 ---
 
