@@ -1,7 +1,7 @@
-use std::borrow::Cow;
 use crate::TestableClient;
 use http::Method;
 use reqwest::{RequestBuilder, Url};
+use std::borrow::Cow;
 use std::collections::HashMap;
 
 pub struct RewireClient {
@@ -28,11 +28,11 @@ impl RewireClient {
 impl RewireClient {
     /// Gets the rewired URL from the request-rewire client instance's `redirects` propriety.
     /// If the request URL is not in the `redirects` hashmap, the request URL is unchanged.
-    /// 
+    ///
     /// The request methods (.get(), .post(), .put()...) of the request-rewire client all use this method internally.
-    /// 
+    ///
     /// # Examples
-    /// 
+    ///
     /// ```
     /// use std::collections::HashMap;
     /// use reqwest_rewire::rewire_client::RewireClient;
@@ -46,15 +46,20 @@ impl RewireClient {
     /// client.get("http://localhost:8080/example?foo=bar").send().await.unwrap(); // hits http://localhost:8080/rewired?foo=bar
     /// ```
     fn get_url<'a>(&'a self, url: &'a str) -> Cow<'a, str> {
-
         let parsed = match Url::parse(url) {
             Ok(u) => u,
             Err(_) => return Cow::Borrowed(url),
         };
 
-        let key = self.redirects.keys()
+        let key = self
+            .redirects
+            .keys()
             .flat_map(|r| Url::parse(r.as_str()))
-            .filter(|u| u.host_str().is_some() && u.host_str() == parsed.host_str() && parsed.path().starts_with(u.path()) )
+            .filter(|u| {
+                u.host_str().is_some()
+                    && u.host_str() == parsed.host_str()
+                    && parsed.path().starts_with(u.path())
+            })
             .max_by(|a, b| a.path().len().cmp(&b.path().len()));
 
         if key.is_none() {
@@ -65,7 +70,7 @@ impl RewireClient {
         let rewire = Url::parse(self.redirects.get(key.as_str()).unwrap());
         let rewire = match rewire {
             Ok(r) => r,
-            Err(_) => return Cow::Borrowed(url)
+            Err(_) => return Cow::Borrowed(url),
         };
 
         let segment_count = rewire.path_segments().map(|s| s.count()).unwrap_or(0);
@@ -89,7 +94,6 @@ impl RewireClient {
 }
 
 impl TestableClient for RewireClient {
-    
     /// Sends a GET request to a rewired URL if it is in the client's `redirects` hashmap, or else to the URL in method call.
     ///
     /// # Examples
@@ -109,7 +113,7 @@ impl TestableClient for RewireClient {
     fn get(&self, url: &str) -> RequestBuilder {
         self.client.get(self.get_url(url).as_ref())
     }
-    
+
     /// Sends a POST request to a rewired URL if it is in the client's `redirects` hashmap, or else to the URL in method call.
     ///
     /// # Examples

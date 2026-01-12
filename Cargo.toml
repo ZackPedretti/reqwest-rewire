@@ -1,6 +1,6 @@
 [package]
 name = "reqwest-rewire"
-version = "0.1.0"
+version = "0.2.0"
 edition = "2024"
 authors = ["Zack PEDRETTI"]
 description = "reqwest-rewire is a lightweight wrapper around reqwest that transparently rewrites outgoing request URLs based on user-defined rules. It is designed primarily for testing and local development, allowing you to redirect HTTP requests to mock servers without changing application code."
