@@ -40,20 +40,42 @@ The **most specific rule always wins**.
 
 ## Usage
 
-### 1. Use the `TestableClient` trait
+### 1. Use the `TestableClient` trait or `reqwest_rewire::Client` enum
 
 Your application code depends on a trait, not a concrete client:
 
 ```rust
     use reqwest_rewire::TestableClient;
 
-    fn fetch_data(client: impl TestableClient) {
+    fn fetch_data(client: Box<dyn TestableClient>) {
         client
             .get("https://real-api.com/api/users")
             .send()
             .unwrap();
     }
 ```
+
+You can also use the Client enum, which has two states:
+
+```rust
+enum Client {
+    ReqwestClient(reqwest::Client),
+    TestClient(RewireClient),
+}
+```
+It does implement the `TestableClient` trait, but it allows you to use it instead of dynamic object:
+
+```rust
+    use reqwest_rewire;
+
+    fn fetch_data(client: reqwest_rewire::Client) { // No Box<dyn ...>
+        client
+            .get("https://real-api.com/api/users")
+            .send()
+            .unwrap();
+    }
+```
+
 ---
 
 ### 2. Use `reqwest::Client` in production
