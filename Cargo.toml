@@ -1,5 +1,5 @@
 [package]
-name = "reqwest_rewire"
+name = "reqwest-rewire"
 version = "0.2.0"
 edition = "2024"
 authors = ["Zack PEDRETTI"]
